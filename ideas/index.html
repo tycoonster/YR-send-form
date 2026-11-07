@@ -302,6 +302,90 @@ const IDEAS = [
   },
   {
     id: '002',
+    title: 'מעבר מ-uPress לשרת פרטי בניהול עצמי',
+    status: 'feedback',
+    created: '2026-11-06',
+    updated: '2026-11-07',
+    summary: 'להעביר את כל האתרים שאנחנו מאחסנים היום ב-uPress לשרת פרטי משלנו (VPS), ולתחזק אותו בעצמנו בעזרת Claude. המטרה לשחזר בשרת את כל מה שמקבלים היום מ-uPress: CDN, SSL, קאש, פיירוול, הגנת DDoS, גיבויים וממשק ניהול.',
+    goal: 'חיסכון ושליטה מלאה באחסון, בלי לאבד ביצועים, אבטחה או גיבויים. בהנחה שיש במשרד מישהו שאחראי טכנית על השרת.',
+    steps: [
+      {t:'שלב 0: מיפוי', d:'רשימת כל האתרים: נפח, תעבורה, וורדפרס או לא, אילו מהם קריטיים (חנויות, לקוחות עם הסכם זמינות), אילו מהם משתמשים בתיבות מייל של uPress, ומה העלות החודשית היום.', who:'אתה'},
+      {t:'שלב 1: החלטה על מבנה', d:'השוואת עלויות ושעות תחזוקה: שרת חשוף לגמרי, או שרת משלנו עם פאנל מנוהל (RunCloud / Cloudways / Ploi / CloudPanel). בחירת ספק שרת (Hetzner / DigitalOcean, בערך 20–60$ לחודש).', who:'שנינו'},
+      {t:'שלב 2: הקמת השרת', d:'Nginx + PHP + MariaDB + Redis, SSL אוטומטי (Let\'s Encrypt), Cloudflare כ-CDN ו-WAF, fail2ban, עדכוני אבטחה אוטומטיים, ניטור זמינות והתראות.', who:'Claude'},
+      {t:'שלב 3: גיבויים', d:'גיבוי יומי ל-S3 או Backblaze עם שמירה ל-30 יום, ובדיקת שחזור אמיתית לפני שמעבירים אתר ראשון.', who:'Claude'},
+      {t:'שלב 4: מיילים', d:'העברת תיבות הדואר לשירות ייעודי (Google Workspace / Zoho / Migadu) ולא לשרת עצמו, כדי לא להגיע לספאם.', who:'שנינו'},
+      {t:'שלב 5: העברת אתרים', d:'אתר פיילוט אחד לא קריטי, בדיקה, ואז העברה הדרגתית במנות. החלפת DNS רק אחרי בדיקה מלאה, ו-uPress נשאר פעיל עד שהכל יציב.', who:'שנינו'},
+    ],
+    owners: [
+      {who:'אתה', what:'רשימת האתרים והמיילים, העלות היום, החלטה על מבנה וספק, אישור כל מעבר אתר'},
+      {who:'אחראי טכני במשרד (לקבוע)', what:'זמינות כשהשרת נופל, אישור עדכונים, קבלת התראות ניטור'},
+      {who:'Claude', what:'הגדרות השרת, סקריפטים, תוכנית ההעברה, הגדרת גיבויים וניטור, עזרה באבחון תקלות'},
+    ],
+    inScope: [
+      'כל האתרים שמאוחסנים היום ב-uPress',
+      'CDN ו-SSL חינמי (Cloudflare + Let\'s Encrypt)',
+      'קאש (Nginx + Redis) במקום SuperCache',
+      'פיירוול והגנת DDoS (Cloudflare WAF + fail2ban)',
+      'גיבויים יומיים ל-30 יום, כולל בדיקת שחזור',
+      'ממשק ניהול (פאנל) במקום הפאנל של uPress',
+    ],
+    outScope: [
+      'שרת מייל עצמאי: המיילים עוברים לשירות ייעודי',
+      'תמיכה אנושית 24/7: Claude לא מנטר את השרת ולא בכוננות',
+    ],
+    risks: [
+      'הפער הגדול: אין תמיכה 24/7. אם השרת נופל בלילה, מישהו מהמשרד צריך לזהות ולטפל.',
+      'שרת מייל עצמאי נוטה להגיע לספאם, ולכן הוא מחוץ לתוכנית.',
+      'קאש, פיירוול והגנת DDoS ברמה של uPress דורשים כיוונון ותחזוקה.',
+      'עדכוני אבטחה הם באחריותנו. שרת שלא מתעדכן הוא סיכון לכל האתרים עליו.',
+    ],
+    questions: [
+      'כמה אתרים יש, ואילו מהם קריטיים?',
+      'כמה משלמים היום ל-uPress, לעומת שרת + שעות תחזוקה?',
+      'מי במשרד יהיה האחראי הטכני, כולל עדכוני אבטחה?',
+      'שרת חשוף לגמרי או עם פאנל מנוהל (דרך הביניים המומלצת)?',
+    ],
+    notes: [
+      {title:'מה מקבלים היום מ-uPress ואיך משחזרים', items:[
+        'IP ייעודי, CloudFlare CDN ו-SSL חינמי: Cloudflare חינמי ו-Let\'s Encrypt. קל.',
+        'SuperCache, פיירוול והגנת DDoS: Nginx + Redis, Cloudflare WAF ו-fail2ban. דורש כיוונון.',
+        'גיבויים אוטומטיים ל-30 יום: גיבוי יומי ל-S3 או Backblaze. קל, וחובה לבדוק שחזור.',
+        'תיבות דואר ללא הגבלה: החלק הבעייתי. מעבירים ל-Google Workspace, Zoho או Migadu.',
+        'ממשק ניהול: CloudPanel, RunCloud או Ploi.',
+        'תמיכה אנושית 24/7: אין תחליף. זה מה שבאמת משלמים עליו.',
+      ]},
+      {title:'ההמלצה', items:[
+        'אם רוב האתרים הם וורדפרס של לקוחות: דרך ביניים. שרת משלנו עם פאנל מנוהל כמו RunCloud או Cloudways.',
+        'כך מקבלים חיסכון ושליטה, בלי לבנות הכל מאפס ובלי להחזיק לבד את כל שכבת הניהול.',
+      ]},
+    ],
+    mockNote: 'מוקאפ להמחשה בלבד: איך יכול להיראות פאנל הניהול של השרת. שמות האתרים והמספרים מומצאים.',
+    mockup: `
+      <div class="desk">
+        <div class="chrome"><i></i><i></i><i></i></div>
+        <div class="body">
+          <div class="m-top">
+            <div><p class="m-h">שרת aura · Hetzner</p><p class="m-p" style="margin:0">Ubuntu · Nginx · PHP 8.3 · Redis</p></div>
+            <span class="m-tag ok">● פעיל</span>
+          </div>
+          <div class="m-kpis">
+            <div><b>12</b><small>אתרים</small></div>
+            <div><b>99.9%</b><small>זמינות 30 יום</small></div>
+            <div><b>03:00</b><small>גיבוי אחרון הצליח</small></div>
+          </div>
+          <div class="m-li" style="display:flex;justify-content:space-between"><span>לקוח-א.co.il</span><span><span class="m-tag ok">SSL</span> <span class="m-tag">קאש</span> <span class="m-tag ok">גובה</span></span></div>
+          <div class="m-li" style="display:flex;justify-content:space-between"><span>לקוח-ב.co.il</span><span><span class="m-tag ok">SSL</span> <span class="m-tag">קאש</span> <span class="m-tag ok">גובה</span></span></div>
+          <div class="m-li" style="display:flex;justify-content:space-between"><span>חנות-ג.co.il</span><span><span class="m-tag warn">עדכון וורדפרס ממתין</span></span></div>
+          <div class="m-li" style="display:flex;justify-content:space-between"><span>לקוח-ד.co.il</span><span><span class="m-tag hot">בהעברה מ-uPress</span></span></div>
+        </div>
+      </div>`,
+    feedback: [
+      {date:'2026-11-06', from:'אתה', text:'שוקל להחליף את uPress, לרכוש שרת פרטי ולתחזק אותו לבד בעזרת Claude, ולהעביר לשם את כל האתרים שאני מאחסן. האם נוכל לשחזר בשרת את כל השירותים שמקבלים היום מ-uPress?'},
+      {date:'2026-11-06', from:'Claude', text:'כן, אפשר. רוב השירותים משתחזרים (CDN, SSL, קאש, פיירוול, גיבויים, פאנל). שני חריגים: מיילים עדיף להעביר לשירות ייעודי, ותמיכה 24/7 אין תחליף, צריך אחראי טכני במשרד. ההמלצה: דרך ביניים עם פאנל מנוהל. הצעד הבא: מיפוי האתרים.'},
+    ],
+  },
+  {
+    id: '003',
     title: 'עוזר אישי למשימות (אדמין)',
     status: 'feedback',
     created: '2026-11-07',

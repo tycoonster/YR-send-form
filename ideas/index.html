@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>לוח רעיונות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5f2; --surface:#ffffff; --surface-2:#efede8; --ink:#1c1b19; --muted:#6b6862; --line:#e2dfd8;
+  --accent:#2f5bea; --accent-soft:#e6ecfd;
+  --s-draft:#8a8680; --s-feedback:#c27a00; --s-decide:#7a4fd6; --s-go:#1f8a4c; --s-doing:#2f5bea; --s-shelf:#a3a09a;
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141413; --surface:#1d1c1a; --surface-2:#262522; --ink:#efede8; --muted:#a19d96; --line:#33312d;
+    --accent:#7c9bff; --accent-soft:#232b45;
+    --s-draft:#a19d96; --s-feedback:#e6a23c; --s-decide:#a888f0; --s-go:#4cc483; --s-doing:#7c9bff; --s-shelf:#6b6862;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141413; --surface:#1d1c1a; --surface-2:#262522; --ink:#efede8; --muted:#a19d96; --line:#33312d;
+  --accent:#7c9bff; --accent-soft:#232b45;
+  --s-draft:#a19d96; --s-feedback:#e6a23c; --s-decide:#a888f0; --s-go:#4cc483; --s-doing:#7c9bff; --s-shelf:#6b6862;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Heebo,system-ui,sans-serif;line-height:1.55;font-size:16px}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+h1{font-size:30px;font-weight:800;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:4px 0 0;font-size:15px}
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px;transition:border-color .15s, transform .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.card .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+.card h3{margin:0;font-size:19px;font-weight:700}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500}
+.empty{border:1.5px dashed var(--line);border-radius:var(--radius);padding:32px;text-align:center;color:var(--muted)}
+/* detail */
+.back{display:inline-flex;gap:6px;align-items:center;color:var(--muted);text-decoration:none;font-size:14px;margin-bottom:14px}
+.back:hover{color:var(--ink)}
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+.hero h2{margin:6px 0 8px;font-size:26px;font-weight:800}
+.hero p{margin:0;color:var(--muted)}
+.hero .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+section.box{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px;min-width:0}
+section.box h4{margin:0 0 14px;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.steps{list-style:none;margin:0;padding:0;position:relative}
+.steps li{position:relative;padding:0 30px 16px 0}
+.steps li:last-child{padding-bottom:0}
+.steps li::before{content:attr(data-n);position:absolute;right:0;top:0;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:700;display:grid;place-items:center}
+.steps li:not(:last-child)::after{content:"";position:absolute;right:10.5px;top:24px;bottom:2px;width:1px;background:var(--line)}
+.steps b{display:block;font-weight:700}
+.steps span{color:var(--muted);font-size:14.5px}
+.steps .who{display:inline-block;font-size:12px;background:var(--surface-2);border-radius:6px;padding:1px 7px;margin-inline-start:6px;color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:right;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:500}
+tr:last-child td{border-bottom:0}
+.scope{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.scope{grid-template-columns:1fr}}
+.scope h5{margin:0 0 8px;font-size:14px;display:flex;gap:6px;align-items:center}
+.scope ul{margin:0;padding-inline-start:18px;font-size:14.5px}
+.scope .in h5{color:var(--s-go)} .scope .out h5{color:#c0392b}
+.q{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.q h5{color:var(--s-feedback)}
+.mock-stage{background:var(--surface-2);border-radius:12px;padding:24px 12px;display:flex;justify-content:center;overflow:auto}
+.mock-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+.feedback{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.feedback li{border-inline-start:3px solid var(--line);padding:2px 12px 2px 0}
+.feedback li.me{border-color:var(--accent)}
+.feedback .d{font-size:12.5px;color:var(--muted)}
+.theme-btn{position:fixed;bottom:16px;left:16px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:17px}
+/* ---------- mockup kit (used inside idea mockups) ---------- */
+.phone{width:300px;max-width:100%;background:#fff;color:#1c1b19;border-radius:28px;border:8px solid #1c1b19;padding:18px 16px 22px;box-shadow:0 10px 30px rgba(0,0,0,.15);font-size:14px}
+.phone .bar{height:5px;width:70px;background:#ddd;border-radius:9px;margin:0 auto 14px}
+.desk{width:640px;max-width:100%;background:#fff;color:#1c1b19;border-radius:10px;border:1px solid #d8d5ce;box-shadow:0 10px 30px rgba(0,0,0,.12);overflow:hidden;font-size:14px}
+.desk .chrome{background:#efede8;padding:8px 12px;display:flex;gap:6px}
+.desk .chrome i{width:10px;height:10px;border-radius:50%;background:#cfcbc3;display:block}
+.desk .body{padding:20px}
+.m-h{font-weight:800;font-size:18px;margin:0 0 4px}
+.m-p{color:#6b6862;margin:0 0 14px;font-size:13px}
+.m-label{font-size:12px;color:#6b6862;margin:10px 0 4px;display:block}
+.m-input{border:1px solid #d8d5ce;border-radius:8px;height:36px;background:#faf9f7}
+.m-input.tall{height:72px}
+.m-btn{margin-top:16px;background:#2f5bea;color:#fff;text-align:center;border-radius:10px;padding:10px;font-weight:700}
+.m-row{display:flex;gap:8px}.m-row>*{flex:1}
+.m-tag{display:inline-block;background:#e6ecfd;color:#2f5bea;border-radius:6px;padding:2px 8px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<button class="theme-btn" id="themeBtn" title="מצב תצוגה" aria-label="החלפת מצב תצוגה">◐</button>
+
+<script>
+/* =====================================================================
+   לוח רעיונות — כל רעיון הוא אובייקט במערך IDEAS.
+   כדי להוסיף רעיון: מעתיקים את אובייקט הדוגמה, מחליפים id ותוכן.
+   סטטוסים: draft | feedback | decide | go | doing | shelf
+   ===================================================================== */
+const STATUS = {
+  draft:    {label:'טיוטה',            color:'var(--s-draft)'},
+  feedback: {label:'ממתין לפידבק',     color:'var(--s-feedback)'},
+  decide:   {label:'לקראת החלטה',      color:'var(--s-decide)'},
+  go:       {label:'אושר לביצוע',      color:'var(--s-go)'},
+  doing:    {label:'בביצוע',           color:'var(--s-doing)'},
+  shelf:    {label:'נגנז / בהמתנה',    color:'var(--s-shelf)'},
+};
+
+const IDEAS = [
+  {
+    id: '000',
+    example: true,
+    title: 'דוגמה: איך ייראה כל רעיון',
+    status: 'feedback',
+    created: '2026-11-07',
+    updated: '2026-11-07',
+    summary: 'כרטיס דוגמה שמראה את המבנה. כשתשלח רעיון אמיתי, אמלא את אותם חלקים — ואת הכרטיס הזה נמחק.',
+    goal: 'שכל רעיון יגיע לנקודת החלטה ברורה: לבצע, לשנות או לגנוז.',
+    steps: [
+      {t:'הבנת הרעיון', d:'אתה שולח רעיון במשפט-שניים. אני שואל רק מה שחוסם תוכנית.', who:'שנינו'},
+      {t:'תוכנית ראשונית', d:'שלבים, אחריות, גבולות גזרה ומוקאפ — בקובץ הזה.', who:'Claude'},
+      {t:'סבב פידבק', d:'אתה מעיר כשנוח לך; אני מעדכן ומתעד בהיסטוריה.', who:'אתה'},
+      {t:'החלטה', d:'מאשר לביצוע / משנה כיוון / גונז.', who:'אתה'},
+      {t:'ירידה לפרטים', d:'אפיון מפורט, משימות, ורק אז קוד.', who:'שנינו'},
+    ],
+    owners: [
+      {who:'אתה', what:'הרעיון, סדרי עדיפויות, החלטה סופית, גישה למערכות חיצוניות'},
+      {who:'Claude', what:'תוכנית, מוקאפ, אפיון טכני, פיתוח ובדיקות'},
+      {who:'גורם חיצוני', what:'למשל: לקוח, ספק, צוות — אם רלוונטי'},
+    ],
+    inScope: ['מה כן נכלל בגרסה הראשונה', 'הפלטפורמה / המסך המרכזי'],
+    outScope: ['מה במפורש לא עכשיו', 'דברים שנדחים לגרסה הבאה'],
+    questions: ['שאלות פתוחות שצריך תשובה עליהן לפני ביצוע'],
+    mockNote: 'מוקאפ להמחשה בלבד — מראה רעיון, לא עיצוב סופי.',
+    mockup: `
+      <div class="phone">
+        <div class="bar"></div>
+        <p class="m-h">כותרת המסך</p>
+        <p class="m-p">שורת הסבר קצרה למשתמש</p>
+        <span class="m-label">שדה ראשון</span><div class="m-input"></div>
+        <div class="m-row">
+          <div><span class="m-label">שדה</span><div class="m-input"></div></div>
+          <div><span class="m-label">שדה</span><div class="m-input"></div></div>
+        </div>
+        <span class="m-label">הערות</span><div class="m-input tall"></div>
+        <div class="m-btn">פעולה ראשית</div>
+      </div>`,
+    feedback: [
+      {date:'2026-11-07', from:'Claude', text:'נפתח לוח הרעיונות. מחכה לרעיון הראשון.'},
+    ],
+  },
+];
+
+/* ===================== render ===================== */
+const app = document.getElementById('app');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const statusTag = s => `<span class="status"><span class="dot" style="background:${STATUS[s].color}"></span>${STATUS[s].label}</span>`;
+let filter = null;
+
+function renderList(){
+  const counts = {};
+  IDEAS.forEach(i => counts[i.status] = (counts[i.status]||0)+1);
+  const list = IDEAS.filter(i => !filter || i.status === filter)
+                    .sort((a,b) => (b.updated||'').localeCompare(a.updated||''));
+  app.innerHTML = `
+    <header class="top">
+      <div>
+        <h1>לוח רעיונות</h1>
+        <p class="sub">רעיון → תוכנית ראשונית → פידבק → החלטה → פרטים</p>
+      </div>
+      <div class="legend">
+        <button class="chip" data-f="" aria-pressed="${!filter}">הכל · ${IDEAS.length}</button>
+        ${Object.entries(STATUS).map(([k,v]) => `
+          <button class="chip" data-f="${k}" aria-pressed="${filter===k}">
+            <span class="dot" style="background:${v.color}"></span>${v.label}${counts[k]?` · ${counts[k]}`:''}
+          </button>`).join('')}
+      </div>
+    </header>
+    ${list.length ? `<div class="grid">${list.map(i => `
+      <a class="card" href="#${i.id}">
+        <div class="meta">${statusTag(i.status)}<span>#${i.id}${i.example?' · דוגמה':''}</span></div>
+        <h3>${esc(i.title)}</h3>
+        <p>${esc(i.summary)}</p>
+        <div class="meta"><span>${i.steps.length} שלבים</span><span>עודכן ${esc(i.updated)}</span></div>
+      </a>`).join('')}</div>`
+    : `<div class="empty">אין רעיונות בסטטוס הזה</div>`}
+  `;
+  app.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { filter = b.dataset.f || null; renderList(); });
+}
+
+function renderIdea(i){
+  app.innerHTML = `
+    <a class="back" href="#">→ כל הרעיונות</a>
+    <div class="hero">
+      <div class="meta">${statusTag(i.status)}<span>#${i.id}</span><span>נוצר ${esc(i.created)}</span><span>עודכן ${esc(i.updated)}</span></div>
+      <h2>${esc(i.title)}</h2>
+      <p>${esc(i.summary)}</p>
+      ${i.goal ? `<p style="margin-top:10px;color:var(--ink)"><b>מטרה:</b> ${esc(i.goal)}</p>` : ''}
+    </div>
+
+    <div class="cols">
+      <section class="box">
+        <h4>שלבי ביצוע</h4>
+        <ol class="steps">
+          ${i.steps.map((s,n) => `<li data-n="${n+1}"><b>${esc(s.t)}${s.who?`<span class="who">${esc(s.who)}</span>`:''}</b><span>${esc(s.d)}</span></li>`).join('')}
+        </ol>
+      </section>
+      <section class="box">
+        <h4>מוקאפ להמחשה</h4>
+        <div class="mock-stage">${i.mockup || '<span style="color:var(--muted)">עוד אין מוקאפ</span>'}</div>
+        ${i.mockNote ? `<p class="mock-note">${esc(i.mockNote)}</p>` : ''}
+      </section>
+    </div>
+
+    <div class="cols">
+      <section class="box">
+        <h4>אחריות</h4>
+        <table><thead><tr><th style="width:30%">מי</th><th>על מה</th></tr></thead>
+        <tbody>${i.owners.map(o => `<tr><td><b>${esc(o.who)}</b></td><td>${esc(o.what)}</td></tr>`).join('')}</tbody></table>
+      </section>
+      <section class="box">
+        <h4>גבולות גזרה</h4>
+        <div class="scope">
+          <div class="in"><h5>✓ בפנים</h5><ul>${i.inScope.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+          <div class="out"><h5>✕ בחוץ (לא עכשיו)</h5><ul>${i.outScope.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+        </div>
+        ${i.questions?.length ? `<div class="q scope"><div><h5>? שאלות פתוחות</h5><ul>${i.questions.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div>` : ''}
+      </section>
+    </div>
+
+    <section class="box">
+      <h4>היסטוריית פידבק</h4>
+      <ul class="feedback">
+        ${i.feedback.slice().reverse().map(f => `<li class="${f.from==='Claude'?'':'me'}"><div class="d">${esc(f.date)} · ${esc(f.from)}</div>${esc(f.text)}</li>`).join('')}
+      </ul>
+    </section>
+  `;
+  window.scrollTo(0,0);
+}
+
+function route(){
+  const id = decodeURIComponent(location.hash.slice(1));
+  const idea = IDEAS.find(i => i.id === id);
+  idea ? renderIdea(idea) : renderList();
+}
+window.addEventListener('hashchange', route);
+route();
+
+/* theme toggle */
+const root = document.documentElement;
+try { const t = localStorage.getItem('ideas-theme'); if (t) root.dataset.theme = t; } catch(e){}
+document.getElementById('themeBtn').onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  try { localStorage.setItem('ideas-theme', root.dataset.theme); } catch(e){}
+};
+</script>
+</body>
+</html>

@@ -97,6 +97,26 @@ tr:last-child td{border-bottom:0}
 .m-btn{margin-top:16px;background:#2f5bea;color:#fff;text-align:center;border-radius:10px;padding:10px;font-weight:700}
 .m-row{display:flex;gap:8px}.m-row>*{flex:1}
 .m-tag{display:inline-block;background:#e6ecfd;color:#2f5bea;border-radius:6px;padding:2px 8px;font-size:12px}
+.m-tag.hot{background:#fdecea;color:#c0392b}.m-tag.ok{background:#e5f4ec;color:#1f8a4c}.m-tag.warn{background:#fdf2e0;color:#a86400}
+.mock-pair{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+.m-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.m-sel{border:1px solid #d8d5ce;border-radius:8px;padding:4px 10px;font-size:12px;background:#faf9f7}
+.m-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.m-tabs span{font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid #d8d5ce}
+.m-tabs span.on{background:#1c1b19;color:#fff;border-color:#1c1b19}
+.m-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.m-kpis div{background:#f6f5f2;border-radius:8px;padding:8px 10px}
+.m-kpis b{display:block;font-size:20px;line-height:1.2}
+.m-kpis small{color:#6b6862;font-size:11.5px}
+.m-card{border:1px solid #e2dfd8;border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px}
+.m-thumb{width:56px;height:56px;border-radius:6px;flex:none;background:linear-gradient(135deg,#f3c9a8,#e98a5a)}
+.m-thumb.b{background:linear-gradient(135deg,#bcd3f7,#5b84d9)}.m-thumb.c{background:linear-gradient(135deg,#d5e8c8,#7db35f)}
+.m-card .t{font-weight:700;font-size:13.5px}
+.m-card .s{color:#6b6862;font-size:12px}
+.m-idea{margin-top:6px;font-size:12px;background:#f6f5f2;border-radius:6px;padding:5px 8px}
+.m-idea b{color:#2f5bea}
+.m-li{border-bottom:1px solid #eee;padding:8px 0;font-size:13px}
+.m-li:last-child{border-bottom:0}
 </style>
 </head>
 <body>
@@ -120,45 +140,119 @@ const STATUS = {
 
 const IDEAS = [
   {
-    id: '000',
-    example: true,
-    title: 'דוגמה: איך ייראה כל רעיון',
+    id: '001',
+    title: 'ניטור מתחרים והשראה ללקוחות',
     status: 'feedback',
     created: '2026-11-07',
     updated: '2026-11-07',
-    summary: 'כרטיס דוגמה שמראה את המבנה. כשתשלח רעיון אמיתי, אמלא את אותם חלקים — ואת הכרטיס הזה נמחק.',
-    goal: 'שכל רעיון יגיע לנקודת החלטה ברורה: לבצע, לשנות או לגנוז.',
+    summary: 'לכל לקוח במשרד יש רשימת מתחרים ועסקי השראה. המערכת עוקבת אחריהם ברשת (אתר, מודעות, סושיאל, גוגל ופלטפורמות הזמנה), מזהה מבצעים, מסרים ותכנים חדשים, ומגישה ללקוח או למנהלת הלקוח תובנות שאפשר להשתמש בהן בפרסום.',
+    goal: 'שמנהלת הלקוח תדע תוך כמה ימים, ולא בדיעבד, שמתחרה יצא במבצע או במסר חדש, ותקבל הצעה איך להגיב.',
     steps: [
-      {t:'הבנת הרעיון', d:'אתה שולח רעיון במשפט-שניים. אני שואל רק מה שחוסם תוכנית.', who:'שנינו'},
-      {t:'תוכנית ראשונית', d:'שלבים, אחריות, גבולות גזרה ומוקאפ — בקובץ הזה.', who:'Claude'},
-      {t:'סבב פידבק', d:'אתה מעיר כשנוח לך; אני מעדכן ומתעד בהיסטוריה.', who:'אתה'},
-      {t:'החלטה', d:'מאשר לביצוע / משנה כיוון / גונז.', who:'אתה'},
-      {t:'ירידה לפרטים', d:'אפיון מפורט, משימות, ורק אז קוד.', who:'שנינו'},
+      {t:'שלב 0: אימות מקורות (פיילוט ידני)', d:'לקוח אחד (המחסן למקצוען אילת) ו-3–5 מתחרים. בודקים ידנית מה באמת אפשר לראות בכל מקור, כל כמה זמן, ובאיזו עלות. יוצא מזה: רשימת מקורות מאושרת.', who:'שנינו'},
+      {t:'שלב 1: אוספים (Collectors)', d:'סקריפטים שרצים לפי לוח זמנים ושומרים "תמונת מצב" לכל מתחרה: מודעות פעילות, באנרים באתר, פוסטים אחרונים, דירוג וביקורות בגוגל. כל פריט נשמר עם תאריך וקישור למקור.', who:'Claude'},
+      {t:'שלב 2: שכבת תובנות (AI)', d:'כל פריט חדש עובר סיווג (מבצע / מוצר חדש / מסר מותגי / אירוע / שינוי מחיר), תקציר בעברית, ו"מה זה אומר עלינו": הצעה קונקרטית לתגובה בפרסום.', who:'Claude'},
+      {t:'שלב 3: לוח בקרה ודוח שבועי', d:'מסך לכל לקוח עם פיד עדכונים, סינון לפי מתחרה וסוג, ודוח שבועי שנשלח למנהלת הלקוח לאישור לפני שמעבירים ללקוח.', who:'Claude'},
+      {t:'שלב 4: הרחבה', d:'הוספת לקוחות, התראות מיידיות על מבצעים, ואולי פורטל צפייה ללקוח עצמו.', who:'שנינו'},
     ],
     owners: [
-      {who:'אתה', what:'הרעיון, סדרי עדיפויות, החלטה סופית, גישה למערכות חיצוניות'},
-      {who:'Claude', what:'תוכנית, מוקאפ, אפיון טכני, פיתוח ובדיקות'},
-      {who:'גורם חיצוני', what:'למשל: לקוח, ספק, צוות — אם רלוונטי'},
+      {who:'אתה', what:'בחירת לקוח הפיילוט, אישור מקורות ותקציב לשירותי נתונים, החלטה מה מוצג ללקוח ומה נשאר פנימי'},
+      {who:'מנהלת הלקוח', what:'הגדרת רשימת המתחרים וההשראה לכל לקוח, סינון ואישור התובנות לפני שהן יוצאות ללקוח, פידבק על איכות ההצעות'},
+      {who:'Claude', what:'אפיון טכני, בניית האוספים, שכבת ה-AI, לוח הבקרה והדוח, תחזוקה כשמקור משתנה'},
+      {who:'ספקי נתונים', what:'שירותי צד ג׳ לאיסוף סושיאל ותוצאות חיפוש (למשל Apify, SerpApi). בחירה סופית אחרי שלב 0'},
     ],
-    inScope: ['מה כן נכלל בגרסה הראשונה', 'הפלטפורמה / המסך המרכזי'],
-    outScope: ['מה במפורש לא עכשיו', 'דברים שנדחים לגרסה הבאה'],
-    questions: ['שאלות פתוחות שצריך תשובה עליהן לפני ביצוע'],
-    mockNote: 'מוקאפ להמחשה בלבד — מראה רעיון, לא עיצוב סופי.',
+    inScope: [
+      'לקוח פיילוט אחד, 3–5 מתחרים',
+      'מידע ציבורי בלבד: מודעות, אתרים, פוסטים ציבוריים, גוגל',
+      'זיהוי מבצעים ומסרים חדשים ותקציר בעברית',
+      'הצעת תגובה פרסומית לכל תובנה',
+      'דוח שבועי למנהלת הלקוח',
+    ],
+    outScope: [
+      'כניסה לחשבונות או מידע שדורש התחברות',
+      'נתוני תקציב או ביצועים של מודעות המתחרים (לא ציבוריים בישראל)',
+      'מעקב בזמן אמת: בפיילוט מספיק פעם-פעמיים ביום',
+      'סריקת קטלוג מחירים מלא',
+      'פרסום אוטומטי של מודעות-תגובה',
+      'פורטל ללקוח עצמו (שלב 4)',
+    ],
+    risks: [
+      'ספריית המודעות של Meta נותנת API רק למודעות פוליטיות ולאירופה. לישראל נצטרך איסוף מהממשק הציבורי או שירות צד ג׳, וזה פחות יציב.',
+      'לאינסטגרם ולטיקטוק אין גישה רשמית לחשבונות של אחרים. שירותי צד ג׳ עולים כסף ונשברים מדי פעם.',
+      'תנאי שימוש של הפלטפורמות: כדאי בדיקה משפטית קצרה לפני שמציגים ללקוחות.',
+      'מתחרים מקומיים קטנים לפעמים בכלל לא מפרסמים דיגיטלית, ואז יהיה מעט מידע.',
+    ],
+    questions: [
+      'כמה לקוחות וכמה מתחרים בממוצע ללקוח, בפיילוט ובהמשך?',
+      'מי צופה: רק מנהלות לקוח, או גם הלקוח ישירות?',
+      'אילו פלטפורמות הכי חשובות לכם? (Meta, גוגל, טיקטוק, Booking/TripAdvisor ללקוחות תיירות)',
+      'מה התקציב החודשי לשירותי נתונים? (הערכה ראשונית: 50–200$ לפיילוט)',
+      'איפה זה יחיה: אפליקציה נפרדת, או דוחות ולוחות בתוך monday?',
+      'אילו כלים כבר יש לכם היום? (Similarweb, Semrush וכד׳)',
+    ],
+    sources: [
+      {name:'ספריית המודעות של Meta', what:'מודעות פעילות בפייסבוק ובאינסטגרם: קריאייטיב, טקסט, תאריך עלייה', how:'ממשק ציבורי או שירות צד ג׳', phase:'פיילוט'},
+      {name:'Google Ads Transparency', what:'מודעות חיפוש, דיספליי ויוטיוב פעילות', how:'ממשק ציבורי או שירות צד ג׳', phase:'פיילוט'},
+      {name:'אתר המתחרה', what:'באנרים, עמודי מבצע, שינויים בעמוד הבית', how:'צילום תקופתי והשוואת שינויים', phase:'פיילוט'},
+      {name:'Google Business', what:'דירוג, ביקורות חדשות, פוסטים ומבצעים בפרופיל', how:'Google Places API (רשמי)', phase:'פיילוט'},
+      {name:'אינסטגרם / פייסבוק / טיקטוק', what:'פוסטים ציבוריים, תדירות, נושאים, מעורבות', how:'שירות צד ג׳', phase:'שלב 1–2'},
+      {name:'תוצאות חיפוש', what:'מי מופיע על מילים כמו "חנות צבע אילת"', how:'SerpApi / DataForSEO', phase:'שלב 2'},
+      {name:'Booking / TripAdvisor', what:'מחירים, דירוג וביקורות (ללקוחות תיירות ואירוח)', how:'שירות צד ג׳', phase:'לפי לקוח'},
+    ],
+    mockNote: 'מוקאפ להמחשה בלבד. המתחרים, המבצעים והמספרים מומצאים ולא מייצגים פעילות אמיתית. משמאל: לוח הבקרה של מנהלת הלקוח. מימין: הדוח השבועי בטלפון.',
     mockup: `
-      <div class="phone">
-        <div class="bar"></div>
-        <p class="m-h">כותרת המסך</p>
-        <p class="m-p">שורת הסבר קצרה למשתמש</p>
-        <span class="m-label">שדה ראשון</span><div class="m-input"></div>
-        <div class="m-row">
-          <div><span class="m-label">שדה</span><div class="m-input"></div></div>
-          <div><span class="m-label">שדה</span><div class="m-input"></div></div>
+      <div class="mock-pair">
+        <div class="phone">
+          <div class="bar"></div>
+          <p class="m-h">דוח שבועי · אילת</p>
+          <p class="m-p">המחסן למקצוען · 1–7 בנובמבר</p>
+          <div class="m-li"><span class="m-tag hot">מבצע</span> עולם הצבעים: 1+1 על צבעי חוץ, עד סוף החודש</div>
+          <div class="m-li"><span class="m-tag">מסר</span> מתחרה ב׳: קמפיין "מקצוענים בדרום" ב-3 גרסאות</div>
+          <div class="m-li"><span class="m-tag warn">ביקורות</span> מתחרה ג׳: 4 ביקורות שליליות על זמני משלוח</div>
+          <div class="m-li"><b style="color:#2f5bea">הצעה לשבוע:</b> להבליט משלוח מהיר באילת ולתת מענה למבצע צבעי החוץ</div>
+          <div class="m-btn">פתיחת הדוח המלא</div>
         </div>
-        <span class="m-label">הערות</span><div class="m-input tall"></div>
-        <div class="m-btn">פעולה ראשית</div>
+        <div class="desk">
+          <div class="chrome"><i></i><i></i><i></i></div>
+          <div class="body">
+            <div class="m-top">
+              <div><p class="m-h">המחסן למקצוען · אילת</p><p class="m-p" style="margin:0">5 מתחרים · עודכן היום 08:00</p></div>
+              <span class="m-sel">7 ימים אחרונים ▾</span>
+            </div>
+            <div class="m-kpis">
+              <div><b>14</b><small>מודעות פעילות אצל מתחרים</small></div>
+              <div><b>3</b><small>מבצעים חדשים השבוע</small></div>
+              <div><b>4.3★</b><small>מול ממוצע מתחרים 4.1</small></div>
+            </div>
+            <div class="m-tabs"><span class="on">הכל</span><span>עולם הצבעים</span><span>מתחרה ב׳</span><span>מתחרה ג׳</span><span>השראה</span></div>
+            <div class="m-card">
+              <div class="m-thumb"></div>
+              <div>
+                <div class="t">עולם הצבעים · 1+1 על צבעי חוץ <span class="m-tag hot">מבצע</span></div>
+                <div class="s">מודעה ב-Meta · פעילה מ-3.11 · 4 גרסאות · גם באנר ראשי באתר</div>
+                <div class="m-idea"><b>הזדמנות:</b> לפני החורף. אפשר להציע ערכת צביעה מלאה עם ייעוץ חינם בסניף</div>
+              </div>
+            </div>
+            <div class="m-card">
+              <div class="m-thumb b"></div>
+              <div>
+                <div class="t">מתחרה ב׳ · "מקצוענים בדרום" <span class="m-tag">מסר מותגי</span></div>
+                <div class="s">Google Ads + יוטיוב · מיקוד באילת ובערבה</div>
+                <div class="m-idea"><b>הזדמנות:</b> הם תופסים את "מקצוענים". אנחנו יכולים לחזק את "הכי קרוב אליך"</div>
+              </div>
+            </div>
+            <div class="m-card">
+              <div class="m-thumb c"></div>
+              <div>
+                <div class="t">השראה · רשת מחו״ל <span class="m-tag ok">רעיון קריאייטיב</span></div>
+                <div class="s">סדרת רילס "לפני/אחרי" · מעורבות גבוהה פי 3 מהממוצע שלהם</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>`,
     feedback: [
-      {date:'2026-11-07', from:'Claude', text:'נפתח לוח הרעיונות. מחכה לרעיון הראשון.'},
+      {date:'2026-11-07', from:'אתה', text:'רעיון: מערכת לניטור מתחרים והשראה לכל לקוח (אתר, סושיאל, חיפוש והזמנות), שתציג ללקוח או למנהלת הלקוח מבצעים ותכנים שיכולים לשמש בפרסום. דוגמה: המחסן למקצוען אילת מול עולם הצבעים.'},
+      {date:'2026-11-07', from:'Claude', text:'תוכנית ראשונית: פיילוט על לקוח אחד, מקורות ציבוריים בלבד, שכבת תובנות עם הצעת תגובה, ודוח שבועי. יש 6 שאלות פתוחות. הכי חשוב לי לדעת מי הקהל (מנהלות או גם הלקוח) ואיפה זה יחיה.'},
     ],
   },
 ];
@@ -218,27 +312,33 @@ function renderIdea(i){
         </ol>
       </section>
       <section class="box">
-        <h4>מוקאפ להמחשה</h4>
-        <div class="mock-stage">${i.mockup || '<span style="color:var(--muted)">עוד אין מוקאפ</span>'}</div>
-        ${i.mockNote ? `<p class="mock-note">${esc(i.mockNote)}</p>` : ''}
-      </section>
-    </div>
-
-    <div class="cols">
-      <section class="box">
-        <h4>אחריות</h4>
-        <table><thead><tr><th style="width:30%">מי</th><th>על מה</th></tr></thead>
-        <tbody>${i.owners.map(o => `<tr><td><b>${esc(o.who)}</b></td><td>${esc(o.what)}</td></tr>`).join('')}</tbody></table>
-      </section>
-      <section class="box">
         <h4>גבולות גזרה</h4>
         <div class="scope">
           <div class="in"><h5>✓ בפנים</h5><ul>${i.inScope.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
           <div class="out"><h5>✕ בחוץ (לא עכשיו)</h5><ul>${i.outScope.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
         </div>
+        ${i.risks?.length ? `<div class="q scope"><div class="out"><h5>⚠ סיכונים ומגבלות</h5><ul>${i.risks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div>` : ''}
         ${i.questions?.length ? `<div class="q scope"><div><h5>? שאלות פתוחות</h5><ul>${i.questions.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div>` : ''}
       </section>
     </div>
+
+    <section class="box">
+      <h4>מוקאפ להמחשה</h4>
+      <div class="mock-stage">${i.mockup || '<span style="color:var(--muted)">עוד אין מוקאפ</span>'}</div>
+      ${i.mockNote ? `<p class="mock-note">${esc(i.mockNote)}</p>` : ''}
+    </section>
+
+    ${i.sources?.length ? `<section class="box">
+      <h4>מקורות נתונים</h4>
+      <table><thead><tr><th style="width:24%">מקור</th><th>מה נאסף</th><th style="width:26%">איך</th><th style="width:12%">שלב</th></tr></thead>
+      <tbody>${i.sources.map(s => `<tr><td><b>${esc(s.name)}</b></td><td>${esc(s.what)}</td><td>${esc(s.how)}</td><td>${esc(s.phase)}</td></tr>`).join('')}</tbody></table>
+    </section>` : ''}
+
+    <section class="box">
+      <h4>אחריות</h4>
+      <table><thead><tr><th style="width:24%">מי</th><th>על מה</th></tr></thead>
+      <tbody>${i.owners.map(o => `<tr><td><b>${esc(o.who)}</b></td><td>${esc(o.what)}</td></tr>`).join('')}</tbody></table>
+    </section>
 
     <section class="box">
       <h4>היסטוריית פידבק</h4>

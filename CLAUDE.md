@@ -6,6 +6,8 @@ This repo is the user's **ideas board**: `ideas/index.html` (single page, Hebrew
 Add it to the board right away. Don't ask whether to add it.
 1. Add a new object to the `IDEAS` array in `ideas/index.html`. Use the next running id (`001`, `002`…), `status: 'feedback'`, and today's date in `created` and `updated`.
 2. Fill in: `summary`, `goal`, `steps` (each with `who`), `owners`, `inScope`, `outScope`, `risks`, `questions`, `mockup` (illustrative HTML using the `.phone` / `.desk` / `m-*` kit) plus `mockNote`. Add `sources` and `notes` when they help.
+   Always add `timeline`: four phases (אפיון מהודק, פיתוח פיילוט, טסטים, הוצאה לפועל), each with `min`/`max` in weeks, a `label` and a description, plus `total` and `assume`. Update it whenever the plan changes.
+   In Hebrew text, write number ranges with a hyphen (`3-4`), not an en-dash, or they render reversed.
 3. Log the user's words and your summary in `feedback`, oldest first.
 4. Render-check the page with Playwright (no page errors, no horizontal scroll at 390px). Then commit and push to this repo's default branch.
 5. Republish the private page the user opens on their phone: use the Artifact tool, publish `ideas/index.html` with
